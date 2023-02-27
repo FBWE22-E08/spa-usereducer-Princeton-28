@@ -4,7 +4,22 @@ import { useReducer } from "react";
 import "./App.scss";
 
 const reducer = (state, action) => {
-  //write your logic here
+  switch (action.type) {
+    case "moveClassA":
+      const student = state.a.filter((student) => student.id === action.id);
+      const newClassA = state.a.filter((student) => student.id !== action.id);
+      const newClassB = [...state.b, student];
+      return { a: newClassA, b: newClassB };
+
+    // case "moveClassB":
+      // const student2 = state.b.filter((student2) => student2.id === action.id);
+      // const newClassA2 = state.a.filter((student2) => student2.id !== action.id);
+      // const newClassB2 = [...state.a, student2];
+      // return { a: newClassB2, b: newClassA2 };
+
+    default:
+      return state;
+  }
 };
 
 const initialState = {
@@ -22,6 +37,26 @@ const App = () => {
 
   //Create a handler and attach it to the buttons to trigger the reducer
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    dispatch({
+      type: "moveClassA",
+      payload: "student",
+    });
+    dispatch({
+      type: "moveClassB",
+      payload: "student",
+    });
+  };
+
+  // const handleClick2 = (e) => {
+  //   e.preventDefault();
+  //   dispatch({
+  //     type: "moveClassB",
+  //     payload: "student",
+  //   });
+  // };
+
   return (
     <div className="wrapper">
       <div data-testid="classrom-A">
@@ -29,7 +64,7 @@ const App = () => {
         {state.a.map((student) => (
           <div data-testid={student.name} key={student.id} className="student">
             <span>{student.name}</span>
-            <button>Move to B</button>
+            <button onClick={handleClick}>Move to B</button>
           </div>
         ))}
       </div>
@@ -39,7 +74,7 @@ const App = () => {
         {state.b.map((student) => (
           <div data-testid={student.name} key={student.id} className="student">
             <span>{student.name}</span>
-            <button>Move to A</button>
+            <button onClick={handleClick}>Move to A</button>
           </div>
         ))}
       </div>
